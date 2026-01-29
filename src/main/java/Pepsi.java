@@ -2,13 +2,28 @@ import java.util.Scanner;
 
 public class Pepsi {
     public static final String longline = "____________________________________________________________\n";
+    //creates a string of 100 indexes
+    public static String[] catalogue = new String[100];
+    //Stores the position that needs to be filled next
+    public static int fill = 0;
     public static boolean repeat(String input){
-        if(input.toLowerCase().equals("bye")) {
+        switch(input.toLowerCase()) {
+        case ("bye"):
             System.out.println(longline + "Bye. Hope to see you again soon!\n" + longline);
             return false;
-        }
-        else{
-            System.out.println(longline + input + "\n" + longline);
+        case ("list"):
+            System.out.println(longline);
+            for (int i = 0; i < 100; i++) {
+                System.out.println(i+1 + "." + catalogue[i] + "\n");
+                if(catalogue[i+1] == null){
+                    System.out.println(longline);
+                    return true;
+                }
+            }
+        default:
+            catalogue[fill] = input;
+            System.out.println(longline+ "added: " + input + "\n" + longline);
+            fill++;
             return true;
         }
     }
