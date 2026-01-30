@@ -16,7 +16,7 @@ public class Pepsi {
             System.out.println(longline);
             for (int i = 0; i < 100; i++) {
                 System.out.println(i + 1 + "." + catalogue[i] + "\n");
-                if (catalogue[i + 1] == null) {
+                if (i == 99 || catalogue[i+1] == null) {
                     System.out.println(longline);
                     return true;
                 }
@@ -61,12 +61,28 @@ public class Pepsi {
         while (true) { //this line will keep running no matter what
             boolean keepGoing = true;
             String input = in.nextLine(); //This will wait for user input
+            input = input.trim();
+            // if user entered nothing (or only spaces)
+            if (input.isEmpty()) {
+                System.out.println(longline + "Stop wasting my time this is not Coca-cola!\n" + longline);
+                continue;
+            }
             //this splits the two characters into their own part
             String[] parts = input.split("\\s+");
             if (parts[0].equalsIgnoreCase("mark") || parts[0].equalsIgnoreCase("unmark")) {
-                //store the next value into a int
-                int number = Integer.parseInt(parts[1]);
-                actionables(parts[0], number);
+                if (parts.length != 2) {
+                    //checks if user inputs anything after mark/unmark
+                    System.out.println(longline + "I know in Coca-Cola there is nothing to mark but not Pepsi!" +
+                            ".\n" + longline);
+                    continue;
+                }
+                try {
+                    int number = Integer.parseInt(parts[1]);
+                    actionables(parts[0], number);
+                } catch (NumberFormatException e) {
+                    //checks if the user input a valid number after unmark
+                    System.out.println(longline + "Stop giving me scraps I am not Coke!.\n" + longline);
+                }
             }
             else{
                 keepGoing = actionables(input);
