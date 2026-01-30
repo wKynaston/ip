@@ -63,12 +63,13 @@ public class Pepsi {
             String input = in.nextLine(); //This will wait for user input
             //this splits the two characters into their own part
             String[] parts = input.split("\\s+");
-            if (parts.length == 1) {
-                keepGoing = actionables(input);
-            } else if (parts.length == 2) {
+            if (parts[0].equalsIgnoreCase("mark") || parts[0].equalsIgnoreCase("unmark")) {
                 //store the next value into a int
                 int number = Integer.parseInt(parts[1]);
                 actionables(parts[0], number);
+            }
+            else{
+                keepGoing = actionables(input);
             }
             if (!keepGoing) {
                 //if repeat returns false will break the while loop and exit
