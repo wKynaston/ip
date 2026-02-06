@@ -1,4 +1,4 @@
-public abstract class Task {
+public class Task {
     protected String description;
     protected boolean isDone;
 
@@ -15,7 +15,9 @@ public abstract class Task {
         return isDone ? "X" : " ";
     }
 
-    protected abstract String typeIcon();
+    protected String typeIcon() {
+        return "?";
+    }
 
     @Override
     public String toString() {
