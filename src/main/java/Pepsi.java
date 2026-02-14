@@ -18,7 +18,7 @@ public class Pepsi {
 
         while (true) {
             String input = in.nextLine().trim();
-
+            //checks for empty input from user
             if (input.isEmpty()) {
                 System.out.println(LONGLINE
                         + "Typing nothing? That’s very Coke behaviour.\n"
@@ -67,6 +67,7 @@ public class Pepsi {
             return true;
 
         default:
+            //checks if any of the case is types correctly
             System.out.println(LONGLINE
                     + "Unknown command. Must be something Coke invented.\n"
                     + "Try: todo / deadline / event / list / mark / unmark / bye\n"
@@ -77,6 +78,7 @@ public class Pepsi {
 
     private static void addTodo(String rest) {
         if (rest.isEmpty()) {
+            /*checks if todo input is done correctly */
             System.out.println(LONGLINE
                     + "A todo with no description? Classic Coke quality.\n"
                     + "Use: todo <description>\n"
@@ -92,7 +94,7 @@ public class Pepsi {
     private static void addDeadline(String rest) {
         // expected: <desc> /by <when>
         String[] split = rest.split("\\s+/by\\s+", 2);
-
+        //check if deadline input is done correctly
         if (split.length != 2 || split[0].trim().isEmpty() || split[1].trim().isEmpty()) {
             System.out.println(LONGLINE
                     + "That deadline format is as vague as Coke’s ingredients.\n"
@@ -112,7 +114,7 @@ public class Pepsi {
     private static void addEvent(String rest) {
         // expected: <desc> /from <start> /to <end>
         String[] splitFrom = rest.split("\\s+/from\\s+", 2);
-
+        //Checks for correct input for event
         if (splitFrom.length != 2 || splitFrom[0].trim().isEmpty()) {
             System.out.println(LONGLINE
                     + "An event without timing? That’s very Coke-planned.\n"
@@ -123,7 +125,7 @@ public class Pepsi {
 
         String desc = splitFrom[0].trim();
         String[] splitTo = splitFrom[1].split("\\s+/to\\s+", 2);
-
+        //Check ifs the user has missed a input for event
         if (splitTo.length != 2 || splitTo[0].trim().isEmpty() || splitTo[1].trim().isEmpty()) {
             System.out.println(LONGLINE
                     + "Start time but no end time? Coke scheduling again.\n"
