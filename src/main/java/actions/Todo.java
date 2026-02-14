@@ -1,4 +1,4 @@
-package Actions;
+package actions;
 
 public class Todo extends Task {
     public Todo(String description) {
