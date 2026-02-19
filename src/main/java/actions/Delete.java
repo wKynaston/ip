@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Delete {
 
-    public static boolean delete(ArrayList<Task> catalogue,
+    public static void delete(ArrayList<Task> catalogue,
                                  int position,
                                  String line) {
 
@@ -14,7 +14,6 @@ public class Delete {
             System.out.println(line
                     + "Invalid task number. Even Coke could count better than that.\n"
                     + line);
-            return false;
         }
 
         Task removed = catalogue.remove(idx);
@@ -26,6 +25,5 @@ public class Delete {
                 + " task(s) left — still more organised than Coke’s marketing team.\n"
                 + line);
 
-        return true;
     }
 }
