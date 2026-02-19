@@ -43,7 +43,7 @@ public class commandParser {
         }
 
         throw new commandException("Unknown command. Must be something Coke invented.\n"
-                + "Try: todo / deadline / event / list / mark / unmark / bye");
+                + "Try: todo / deadline / event / list / mark / unmark / delete / bye");
     }
 
     private static Task parseTodo(String rest) throws commandException {

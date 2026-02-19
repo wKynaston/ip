@@ -1,9 +1,11 @@
 package pepsi;
 
 import actions.Task;
+import actions.Delete;
 import exceptions.commandException;
 import exceptions.commandParser;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Pepsi {
@@ -11,8 +13,9 @@ public class Pepsi {
     public static final String LONGLINE =
             "____________________________________________________________\n";
 
-    private static final Task[] catalogue = new Task[100];
-    private static int fill = 0;
+    // Proper collection usage
+    private static final ArrayList<Task> catalogue = new ArrayList<>();
+    private static final int MAX_TASKS = 100;
 
     public static void main(String[] args) {
         greetings();
@@ -50,6 +53,11 @@ public class Pepsi {
                     handleMarking(cmd, number);
                     continue;
                 }
+                if (cmd.equals("delete")) {
+                    int number = commandParser.parseTaskNumber(rest, cmd);
+                    Delete.delete(catalogue, number, LONGLINE);
+                    continue;
+                }
 
                 if (cmd.equals("todo") || cmd.equals("deadline") || cmd.equals("event")) {
                     Task task = commandParser.parseTask(cmd, rest);
@@ -57,8 +65,9 @@ public class Pepsi {
                     continue;
                 }
 
-                throw new commandException("Unknown command. Must be something Coke invented.\n"
-                        + "Try: todo / deadline / event / list / mark / unmark / bye");
+                throw new commandException(
+                        "Unknown command. Must be something Coke invented.\n"
+                                + "Try: todo / deadline / event / list / mark / unmark / bye");
 
             } catch (commandException e) {
                 System.out.println(LONGLINE + e.getMessage() + "\n" + LONGLINE);
@@ -67,40 +76,42 @@ public class Pepsi {
     }
 
     private static void addTask(Task task) {
-        if (fill >= catalogue.length) {
+        if (catalogue.size() >= MAX_TASKS) {
             System.out.println(LONGLINE
                     + "Your list is full. Unlike Coke, I actually have limits.\n"
                     + LONGLINE);
             return;
         }
 
-        catalogue[fill++] = task;
+        catalogue.add(task);
 
         System.out.println(LONGLINE
                 + "Task added successfully. Unlike Coke, I don’t disappoint.\n"
                 + "  " + task + "\n"
-                + "You now have " + fill + " tasks — still fewer than Coke’s failures.\n"
+                + "You now have " + catalogue.size()
+                + " tasks — still fewer than Coke’s failures.\n"
                 + LONGLINE);
     }
 
     private static void handleMarking(String cmd, int number) throws commandException {
         int idx = number - 1;
 
-        if (idx < 0 || idx >= fill || catalogue[idx] == null) {
-            throw new commandException("Invalid task number. Even Coke could count better than that.");
+        if (idx < 0 || idx >= catalogue.size()) {
+            throw new commandException(
+                    "Invalid task number. Even Coke could count better than that.");
         }
 
         if (cmd.equals("mark")) {
-            catalogue[idx].setDone(true);
+            catalogue.get(idx).setDone(true);
             System.out.println(LONGLINE
                     + "Nice. Marked as done — something Coke rarely achieves:\n"
-                    + "  " + catalogue[idx] + "\n"
+                    + "  " + catalogue.get(idx) + "\n"
                     + LONGLINE);
         } else {
-            catalogue[idx].setDone(false);
+            catalogue.get(idx).setDone(false);
             System.out.println(LONGLINE
                     + "Unmarked. Back to ‘not done’, like Coke’s product decisions:\n"
-                    + "  " + catalogue[idx] + "\n"
+                    + "  " + catalogue.get(idx) + "\n"
                     + LONGLINE);
         }
     }
@@ -109,11 +120,11 @@ public class Pepsi {
         System.out.println(LONGLINE);
         System.out.println("Here’s your task list — cleaner than Coke’s brand image:");
 
-        if (fill == 0) {
+        if (catalogue.isEmpty()) {
             System.out.println("(empty) Like Coke’s value proposition.");
         } else {
-            for (int i = 0; i < fill; i++) {
-                System.out.println((i + 1) + ". " + catalogue[i]);
+            for (int i = 0; i < catalogue.size(); i++) {
+                System.out.println((i + 1) + ". " + catalogue.get(i));
             }
         }
 
