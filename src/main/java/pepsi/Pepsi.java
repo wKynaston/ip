@@ -1,6 +1,7 @@
 package pepsi;
 
 import actions.Task;
+import actions.Delete;
 import exceptions.commandException;
 import exceptions.commandParser;
 
@@ -50,6 +51,11 @@ public class Pepsi {
                 if (cmd.equals("mark") || cmd.equals("unmark")) {
                     int number = commandParser.parseTaskNumber(rest, cmd);
                     handleMarking(cmd, number);
+                    continue;
+                }
+                if (cmd.equals("delete")) {
+                    int number = commandParser.parseTaskNumber(rest, cmd);
+                    Delete.delete(catalogue, number, LONGLINE);
                     continue;
                 }
 
