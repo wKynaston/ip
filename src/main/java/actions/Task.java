@@ -13,6 +13,14 @@ public class Task {
         isDone = done;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
     protected String statusIcon() {
         return isDone ? "X" : " ";
     }

@@ -1,9 +1,9 @@
 package pepsi;
 
 import actions.Task;
-import actions.Delete;
 import exceptions.commandException;
 import exceptions.commandParser;
+import storage.Storage;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,9 +13,8 @@ public class Pepsi {
     public static final String LONGLINE =
             "____________________________________________________________\n";
 
-    // Proper collection usage
-    private static final ArrayList<Task> catalogue = new ArrayList<>();
-    private static final int MAX_TASKS = 100;
+    //Load tasks when program starts
+    private static final ArrayList<Task> catalogue = Storage.load();
 
     public static void main(String[] args) {
         greetings();
@@ -53,9 +52,11 @@ public class Pepsi {
                     handleMarking(cmd, number);
                     continue;
                 }
+
+                //delete command
                 if (cmd.equals("delete")) {
                     int number = commandParser.parseTaskNumber(rest, cmd);
-                    Delete.delete(catalogue, number, LONGLINE);
+                    handleDelete(number);
                     continue;
                 }
 
@@ -67,7 +68,8 @@ public class Pepsi {
 
                 throw new commandException(
                         "Unknown command. Must be something Coke invented.\n"
-                                + "Try: todo / deadline / event / list / mark / unmark / bye");
+                                + "Try: todo / deadline / event / list / mark / unmark / delete / bye"
+                );
 
             } catch (commandException e) {
                 System.out.println(LONGLINE + e.getMessage() + "\n" + LONGLINE);
@@ -75,21 +77,19 @@ public class Pepsi {
         }
     }
 
-    private static void addTask(Task task) {
-        if (catalogue.size() >= MAX_TASKS) {
-            System.out.println(LONGLINE
-                    + "Your list is full. Unlike Coke, I actually have limits.\n"
-                    + LONGLINE);
-            return;
-        }
+    private static void addTask(Task task) throws commandException {
+        // If you want a cap, you can keep one:
+        // if (catalogue.size() >= 100) throw new commandException("Your list is full...");
 
         catalogue.add(task);
+
+        //Save after change
+        Storage.save(catalogue);
 
         System.out.println(LONGLINE
                 + "Task added successfully. Unlike Coke, I don’t disappoint.\n"
                 + "  " + task + "\n"
-                + "You now have " + catalogue.size()
-                + " tasks — still fewer than Coke’s failures.\n"
+                + "You now have " + catalogue.size() + " tasks — still fewer than Coke’s failures.\n"
                 + LONGLINE);
     }
 
@@ -97,23 +97,46 @@ public class Pepsi {
         int idx = number - 1;
 
         if (idx < 0 || idx >= catalogue.size()) {
-            throw new commandException(
-                    "Invalid task number. Even Coke could count better than that.");
+            throw new commandException("Invalid task number. Even Coke could count better than that.");
         }
 
+        Task t = catalogue.get(idx);
+
         if (cmd.equals("mark")) {
-            catalogue.get(idx).setDone(true);
+            t.setDone(true);
             System.out.println(LONGLINE
                     + "Nice. Marked as done — something Coke rarely achieves:\n"
-                    + "  " + catalogue.get(idx) + "\n"
+                    + "  " + t + "\n"
                     + LONGLINE);
         } else {
-            catalogue.get(idx).setDone(false);
+            t.setDone(false);
             System.out.println(LONGLINE
                     + "Unmarked. Back to ‘not done’, like Coke’s product decisions:\n"
-                    + "  " + catalogue.get(idx) + "\n"
+                    + "  " + t + "\n"
                     + LONGLINE);
         }
+
+        //Save after change
+        Storage.save(catalogue);
+    }
+
+    private static void handleDelete(int number) throws commandException {
+        int idx = number - 1;
+
+        if (idx < 0 || idx >= catalogue.size()) {
+            throw new commandException("Invalid task number. Coke-level counting detected.");
+        }
+
+        Task removed = catalogue.remove(idx);
+
+        //Save after change
+        Storage.save(catalogue);
+
+        System.out.println(LONGLINE
+                + "Noted. I’ve removed this task — like Pepsi removing Coke from relevance:\n"
+                + "  " + removed + "\n"
+                + "Now you have " + catalogue.size() + " tasks in the list.\n"
+                + LONGLINE);
     }
 
     private static void listTasks() {
