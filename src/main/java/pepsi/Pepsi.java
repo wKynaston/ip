@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Pepsi {
 
-    public static final String LONGLINE =
+    public static final String DIVIDER =
             "____________________________________________________________\n";
 
     //Load tasks when program starts
@@ -36,9 +36,9 @@ public class Pepsi {
                 String rest = (parts.length == 2) ? parts[1].trim() : "";
 
                 if (cmd.equals("bye")) {
-                    System.out.println(LONGLINE
+                    System.out.println(DIVIDER
                             + "Leaving already? Guess you’re switching to Coke.\n"
-                            + LONGLINE);
+                            + DIVIDER);
                     break;
                 }
 
@@ -72,7 +72,7 @@ public class Pepsi {
                 );
 
             } catch (commandException e) {
-                System.out.println(LONGLINE + e.getMessage() + "\n" + LONGLINE);
+                System.out.println(DIVIDER + e.getMessage() + "\n" + DIVIDER);
             }
         }
     }
@@ -86,11 +86,11 @@ public class Pepsi {
         //Save after change
         Storage.save(catalogue);
 
-        System.out.println(LONGLINE
+        System.out.println(DIVIDER
                 + "Task added successfully. Unlike Coke, I don’t disappoint.\n"
                 + "  " + task + "\n"
                 + "You now have " + catalogue.size() + " tasks — still fewer than Coke’s failures.\n"
-                + LONGLINE);
+                + DIVIDER);
     }
 
     private static void handleMarking(String cmd, int number) throws commandException {
@@ -104,16 +104,16 @@ public class Pepsi {
 
         if (cmd.equals("mark")) {
             t.setDone(true);
-            System.out.println(LONGLINE
+            System.out.println(DIVIDER
                     + "Nice. Marked as done — something Coke rarely achieves:\n"
                     + "  " + t + "\n"
-                    + LONGLINE);
+                    + DIVIDER);
         } else {
             t.setDone(false);
-            System.out.println(LONGLINE
+            System.out.println(DIVIDER
                     + "Unmarked. Back to ‘not done’, like Coke’s product decisions:\n"
                     + "  " + t + "\n"
-                    + LONGLINE);
+                    + DIVIDER);
         }
 
         //Save after change
@@ -132,15 +132,15 @@ public class Pepsi {
         //Save after change
         Storage.save(catalogue);
 
-        System.out.println(LONGLINE
+        System.out.println(DIVIDER
                 + "Noted. I’ve removed this task — like Pepsi removing Coke from relevance:\n"
                 + "  " + removed + "\n"
                 + "Now you have " + catalogue.size() + " tasks in the list.\n"
-                + LONGLINE);
+                + DIVIDER);
     }
 
     private static void listTasks() {
-        System.out.println(LONGLINE);
+        System.out.println(DIVIDER);
         System.out.println("Here’s your task list — cleaner than Coke’s brand image:");
 
         if (catalogue.isEmpty()) {
@@ -151,11 +151,11 @@ public class Pepsi {
             }
         }
 
-        System.out.println("\n" + LONGLINE);
+        System.out.println("\n" + DIVIDER);
     }
 
     private static void greetings() {
-        System.out.println(LONGLINE);
+        System.out.println(DIVIDER);
         String logo = """
                  ____  _____ ____  ____ ___
                 |  _ \\| ____|  _ \\/ ___|_ _|
@@ -168,6 +168,6 @@ public class Pepsi {
                 "Hello! I'm Pepsi.\n"
                         + "Smarter, clearer, and less overrated than Coke.\n"
                         + "What can I do for you today?\n"
-                        + LONGLINE);
+                        + DIVIDER);
     }
 }
