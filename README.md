@@ -1,26 +1,169 @@
-# Duke project template
+# Pepsi — Task Manager Chatbot
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+> _Smarter, clearer, and less overrated than Coke._
 
-## Setting up in Intellij
+Pepsi is a command-line chatbot that helps you keep track of your tasks. It supports three types of tasks, persistent storage, and keyword search — all through simple text commands.
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+---
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Duke.java` file, right-click it, and choose `Run Duke.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+## Quick Start
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+**Prerequisites:** JDK 17
+
+1. Run the application.
+2. Pepsi will load your previously saved tasks automatically.
+3. Start typing commands — see the full list below.
+
+> [!TIP]
+> Tasks are saved automatically after every change, so you never need to manually save.
+
+---
+
+## Features
+
+### Add a To-Do
+A basic task with no date.
+
+```
+todo <description>
+```
+
+**Example:**
+```
+todo buy groceries
+```
+
+---
+
+### Add a Deadline
+A task with a due date.
+
+```
+deadline <description> /by <date>
+```
+
+**Example:**
+```
+deadline submit assignment /by 2025-04-15
+```
+
+> [!IMPORTANT]
+> The date **must** be in `yyyy-MM-dd` format (e.g. `2025-04-15`). Any other format will be rejected.
+
+---
+
+### Add an Event
+A task spanning a time range.
+
+```
+event <description> /from <start> /to <end>
+```
+
+**Example:**
+```
+event team meeting /from Monday 2pm /to 4pm
+```
+
+---
+
+### List All Tasks
+Displays everything currently in your list.
+
+```
+list
+```
+
+---
+
+### Mark a Task as Done
+
+```
+mark <task number>
+```
+
+**Example:**
+```
+mark 2
+```
+
+---
+
+### Unmark a Task
+
+```
+unmark <task number>
+```
+
+---
+
+### Delete a Task
+
+```
+delete <task number>
+```
+
+> [!NOTE]
+> Use `list` first to confirm the task number before deleting.
+
+---
+
+### Find Tasks by Keyword
+Searches all task descriptions. Case-insensitive.
+
+```
+find <keyword>
+```
+
+**Example:**
+```
+find assignment
+```
+
+---
+
+### Exit
+
+```
+bye
+```
+
+---
+
+## Understanding the Task Display
+
+Each task is shown in this format:
+
+```
+[type][status] description
+```
+
+| Symbol | Meaning |
+|--------|---------|
+| `T` | Todo |
+| `D` | Deadline |
+| `E` | Event |
+| `X` | Done |
+| ` ` _(blank)_ | Not done |
+
+**Example output from `list`:**
+```
+1. [T][ ] buy groceries
+2. [D][X] submit assignment (by: Apr 15 2025)
+3. [E][ ] team meeting (from: Monday 2pm to 4pm)
+```
+
+---
+
+## Command Summary
+
+| Command | Format |
+|---------|--------|
+| Add todo | `todo <description>` |
+| Add deadline | `deadline <description> /by <yyyy-MM-dd>` |
+| Add event | `event <description> /from <start> /to <end>` |
+| List all | `list` |
+| Mark done | `mark <number>` |
+| Unmark | `unmark <number>` |
+| Delete | `delete <number>` |
+| Find | `find <keyword>` |
+| Exit | `bye` |
