@@ -1,4 +1,6 @@
-package actions;
+package tasks;
+
+import exceptions.CommandException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,16 +13,16 @@ public class Deadline extends Task {
 
     private final LocalDate by;
 
-    public Deadline(String description, String by) {
+    public Deadline(String description, String by) throws CommandException {
         super(description);
         this.by = parseDate(by);
     }
 
-    private static LocalDate parseDate(String dateStr) {
+    private static LocalDate parseDate(String dateStr) throws CommandException {
         try {
             return LocalDate.parse(dateStr.trim(), INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(
+            throw new CommandException(
                     "Invalid date format. Use yyyy-MM-dd e.g. 2019-10-15");
         }
     }

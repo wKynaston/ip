@@ -1,13 +1,9 @@
 package ui;
 
-import actions.Task;
+import tasks.Task;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * Handles all interactions with the user.
- * Responsible for reading input and printing all output.
- */
 public class Ui {
 
     public static final String DIVIDER =
@@ -19,7 +15,6 @@ public class Ui {
         this.scanner = new Scanner(System.in);
     }
 
-    /** Reads one line of input from the user. */
     public String readCommand() {
         return scanner.nextLine();
     }
@@ -96,6 +91,21 @@ public class Ui {
         } else {
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println((i + 1) + ". " + tasks.get(i));
+            }
+        }
+
+        System.out.println("\n" + DIVIDER);
+    }
+
+    public void showMatchingTasks(ArrayList<Task> matches) {
+        System.out.println(DIVIDER);
+
+        if (matches.isEmpty()) {
+            System.out.println("No matching tasks found. Even Coke couldn't find that.");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matches.size(); i++) {
+                System.out.println((i + 1) + ". " + matches.get(i));
             }
         }
 
