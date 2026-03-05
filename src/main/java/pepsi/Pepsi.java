@@ -4,28 +4,24 @@ import actions.Task;
 import exceptions.commandException;
 import exceptions.commandParser;
 import storage.Storage;
+import ui.Ui;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Pepsi {
 
-    public static final String DIVIDER =
-            "____________________________________________________________\n";
-
-    //Load tasks when program starts
+    // Load tasks when program starts
     private static final ArrayList<Task> catalogue = Storage.load();
+    private static final Ui ui = new Ui();
 
     public static void main(String[] args) {
-        greetings();
+        ui.showWelcome();
         manageList();
     }
 
     private static void manageList() {
-        Scanner in = new Scanner(System.in);
-
         while (true) {
-            String input = in.nextLine();
+            String input = ui.readCommand();
 
             try {
                 commandParser.validateNotEmpty(input);
@@ -36,14 +32,12 @@ public class Pepsi {
                 String rest = (parts.length == 2) ? parts[1].trim() : "";
 
                 if (cmd.equals("bye")) {
-                    System.out.println(DIVIDER
-                            + "Leaving already? Guess you’re switching to Coke.\n"
-                            + DIVIDER);
+                    ui.showGoodbye();
                     break;
                 }
 
                 if (cmd.equals("list")) {
-                    listTasks();
+                    ui.showTaskList(catalogue);
                     continue;
                 }
 
@@ -53,7 +47,6 @@ public class Pepsi {
                     continue;
                 }
 
-                //delete command
                 if (cmd.equals("delete")) {
                     int number = commandParser.parseTaskNumber(rest, cmd);
                     handleDelete(number);
@@ -72,25 +65,15 @@ public class Pepsi {
                 );
 
             } catch (commandException e) {
-                System.out.println(DIVIDER + e.getMessage() + "\n" + DIVIDER);
+                ui.showError(e.getMessage());
             }
         }
     }
 
-    private static void addTask(Task task) throws commandException {
-        // If you want a cap, you can keep one:
-        // if (catalogue.size() >= 100) throw new commandException("Your list is full...");
-
+    private static void addTask(Task task) {
         catalogue.add(task);
-
-        //Save after change
         Storage.save(catalogue);
-
-        System.out.println(DIVIDER
-                + "Task added successfully. Unlike Coke, I don’t disappoint.\n"
-                + "  " + task + "\n"
-                + "You now have " + catalogue.size() + " tasks — still fewer than Coke’s failures.\n"
-                + DIVIDER);
+        ui.showTaskAdded(task, catalogue.size());
     }
 
     private static void handleMarking(String cmd, int number) throws commandException {
@@ -104,19 +87,12 @@ public class Pepsi {
 
         if (cmd.equals("mark")) {
             t.setDone(true);
-            System.out.println(DIVIDER
-                    + "Nice. Marked as done — something Coke rarely achieves:\n"
-                    + "  " + t + "\n"
-                    + DIVIDER);
+            ui.showTaskMarked(t);
         } else {
             t.setDone(false);
-            System.out.println(DIVIDER
-                    + "Unmarked. Back to ‘not done’, like Coke’s product decisions:\n"
-                    + "  " + t + "\n"
-                    + DIVIDER);
+            ui.showTaskUnmarked(t);
         }
 
-        //Save after change
         Storage.save(catalogue);
     }
 
@@ -128,46 +104,7 @@ public class Pepsi {
         }
 
         Task removed = catalogue.remove(idx);
-
-        //Save after change
         Storage.save(catalogue);
-
-        System.out.println(DIVIDER
-                + "Noted. I’ve removed this task — like Pepsi removing Coke from relevance:\n"
-                + "  " + removed + "\n"
-                + "Now you have " + catalogue.size() + " tasks in the list.\n"
-                + DIVIDER);
-    }
-
-    private static void listTasks() {
-        System.out.println(DIVIDER);
-        System.out.println("Here’s your task list — cleaner than Coke’s brand image:");
-
-        if (catalogue.isEmpty()) {
-            System.out.println("(empty) Like Coke’s value proposition.");
-        } else {
-            for (int i = 0; i < catalogue.size(); i++) {
-                System.out.println((i + 1) + ". " + catalogue.get(i));
-            }
-        }
-
-        System.out.println("\n" + DIVIDER);
-    }
-
-    private static void greetings() {
-        System.out.println(DIVIDER);
-        String logo = """
-                 ____  _____ ____  ____ ___
-                |  _ \\| ____|  _ \\/ ___|_ _|
-                | |_) |  _| | |_) \\___ \\| |
-                |  __/| |___|  __/ ___) | |
-                |_|   |_____|_|   |____/___|
-                """;
-        System.out.println(logo);
-        System.out.println(
-                "Hello! I'm Pepsi.\n"
-                        + "Smarter, clearer, and less overrated than Coke.\n"
-                        + "What can I do for you today?\n"
-                        + DIVIDER);
+        ui.showTaskDeleted(removed, catalogue.size());
     }
 }
