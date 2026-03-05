@@ -10,15 +10,29 @@ import ui.Ui;
 
 public class Pepsi {
 
-    private static final Ui ui = new Ui();
-    private static final TaskList tasks = new TaskList(Storage.load());
+    private final Ui ui;
+    private final Storage storage;
+    private final TaskList tasks;
 
-    public static void main(String[] args) {
+    public Pepsi(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        TaskList loaded;
+        try {
+            loaded = new TaskList(storage.load());
+        } catch (commandException e) {
+            ui.showLoadingError();
+            loaded = new TaskList();
+        }
+        tasks = loaded;
+    }
+
+    public void run() {
         ui.showWelcome();
         manageList();
     }
 
-    private static void manageList() {
+    private void manageList() {
         while (true) {
             try {
                 String input = ui.readCommand();
@@ -65,27 +79,31 @@ public class Pepsi {
         }
     }
 
-    private static void addTask(Task task) {
+    private void addTask(Task task) {
         tasks.add(task);
-        Storage.save(tasks.getTasks());
+        storage.save(tasks.getTasks());
         ui.showTaskAdded(task, tasks.size());
     }
 
-    private static void handleMarking(String cmd, int number) throws commandException {
+    private void handleMarking(String cmd, int number) throws commandException {
         if (cmd.equals("mark")) {
             Task t = tasks.mark(number);
-            Storage.save(tasks.getTasks());
+            storage.save(tasks.getTasks());
             ui.showTaskMarked(t);
         } else {
             Task t = tasks.unmark(number);
-            Storage.save(tasks.getTasks());
+            storage.save(tasks.getTasks());
             ui.showTaskUnmarked(t);
         }
     }
 
-    private static void handleDelete(int number) throws commandException {
+    private void handleDelete(int number) throws commandException {
         Task removed = tasks.delete(number);
-        Storage.save(tasks.getTasks());
+        storage.save(tasks.getTasks());
         ui.showTaskDeleted(removed, tasks.size());
+    }
+
+    public static void main(String[] args) {
+        new Pepsi("data/pepsi.txt").run();
     }
 }
