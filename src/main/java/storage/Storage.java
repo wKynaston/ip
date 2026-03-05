@@ -6,14 +6,31 @@ import exceptions.CommandException;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Handles reading and writing of tasks to a persistent flat-file storage.
+ * Tasks are stored one per line in a pipe-delimited format.
+ */
 public class Storage {
 
     private final String filePath;
 
+    /**
+     * Constructs a Storage instance pointing to the given file path.
+     *
+     * @param filePath the path to the data file
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the data file.
+     * Creates the file and any necessary parent directories if they do not exist.
+     * Lines that cannot be parsed are silently skipped.
+     *
+     * @return list of tasks loaded from disk
+     * @throws CommandException if an I/O error occurs while reading the file
+     */
     public ArrayList<Task> load() throws CommandException {
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -53,6 +70,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the given list of tasks to the data file, overwriting existing content.
+     *
+     * @param tasks the list of tasks to save
+     */
     public void save(ArrayList<Task> tasks) {
         try {
             FileWriter writer = new FileWriter(filePath);
@@ -66,6 +88,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a single line from the data file into a Task.
+     * Returns {@code null} if the line is malformed or unrecognised.
+     *
+     * @param line the raw line string from the file
+     * @return the parsed {@link Task}, or {@code null} if parsing fails
+     */
     private Task parseLine(String line) {
         try {
             String[] parts = line.split(" \\| ");
@@ -96,6 +125,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Serialises a Task into a pipe-delimited string for storage.
+     *
+     * @param t the task to serialise
+     * @return the formatted storage string, or an empty string if the type is unknown
+     */
     private String serialize(Task t) {
         String status = t.isDone() ? "1" : "0";
 

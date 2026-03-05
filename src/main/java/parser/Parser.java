@@ -7,8 +7,19 @@ import tasks.Event;
 import tasks.Task;
 import tasks.Todo;
 
+/**
+ * Parses raw user input strings into executable {@link Command} objects.
+ * Also validates input format and task field structure before constructing tasks.
+ */
 public class Parser {
 
+    /**
+     * Parses a full user input string and returns the corresponding command.
+     *
+     * @param fullCommand the raw input string from the user
+     * @return the parsed {@link Command}
+     * @throws CommandException if the input is empty, malformed, or unrecognised
+     */
     public static Command parse(String fullCommand) throws CommandException {
         validateNotEmpty(fullCommand);
 
@@ -47,12 +58,26 @@ public class Parser {
         }
     }
 
+    /**
+     * Validates that the input string is not null or blank.
+     *
+     * @param input the input to validate
+     * @throws CommandException if the input is null or empty
+     */
     public static void validateNotEmpty(String input) throws CommandException {
         if (input == null || input.trim().isEmpty()) {
-            throw new CommandException("Typing nothing? That’s very Coke behaviour.");
+            throw new CommandException("Typing nothing? That's very Coke behaviour.");
         }
     }
 
+    /**
+     * Parses a task number from the argument string of a command.
+     *
+     * @param rest the argument portion of the user input
+     * @param cmd  the command name, used in error messages
+     * @return the parsed one-based task number
+     * @throws CommandException if the argument is missing or not a valid integer
+     */
     public static int parseTaskNumber(String rest, String cmd) throws CommandException {
         if (rest == null || rest.trim().isEmpty()) {
             throw new CommandException("What? Coke-level instructions detected.\n"
@@ -63,13 +88,21 @@ public class Parser {
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch < '0' || ch > '9') {
-                throw new CommandException("That’s not a number. Coke maths strikes again.");
+                throw new CommandException("That's not a number. Coke maths strikes again.");
             }
         }
 
         return Integer.parseInt(s);
     }
 
+    /**
+     * Dispatches task parsing to the appropriate method based on command type.
+     *
+     * @param cmd  the task type command ({@code "todo"}, {@code "deadline"}, or {@code "event"})
+     * @param rest the remaining input after the command keyword
+     * @return the constructed {@link Task}
+     * @throws CommandException if the task arguments are invalid
+     */
     public static Task parseTask(String cmd, String rest) throws CommandException {
         if (cmd.equals("todo")) {
             return parseTodo(rest);
@@ -98,7 +131,7 @@ public class Parser {
 
         String[] split = rest.split("\\s+/by\\s+", 2);
         if (split.length != 2 || split[0].trim().isEmpty() || split[1].trim().isEmpty()) {
-            throw new CommandException("That deadline format is as vague as Coke’s ingredients.\n"
+            throw new CommandException("That deadline format is as vague as Coke's ingredients.\n"
                     + "Use: deadline <description> /by <when>");
         }
 
@@ -110,7 +143,7 @@ public class Parser {
 
         String[] splitFrom = rest.split("\\s+/from\\s+", 2);
         if (splitFrom.length != 2 || splitFrom[0].trim().isEmpty()) {
-            throw new CommandException("An event without timing? That’s very Coke-planned.\n"
+            throw new CommandException("An event without timing? That's very Coke-planned.\n"
                     + "Use: event <description> /from <start> /to <end>");
         }
 
