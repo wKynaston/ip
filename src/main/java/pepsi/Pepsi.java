@@ -2,7 +2,8 @@ package pepsi;
 
 import actions.Task;
 import exceptions.commandException;
-import exceptions.commandParser;
+import parser.Parser;
+import parser.Parser.ParsedCommand;
 import storage.Storage;
 import tasklist.TaskList;
 import ui.Ui;
@@ -19,15 +20,11 @@ public class Pepsi {
 
     private static void manageList() {
         while (true) {
-            String input = ui.readCommand();
-
             try {
-                commandParser.validateNotEmpty(input);
-
-                input = input.trim();
-                String[] parts = input.split("\\s+", 2);
-                String cmd = parts[0].toLowerCase();
-                String rest = (parts.length == 2) ? parts[1].trim() : "";
+                String input = ui.readCommand();
+                ParsedCommand parsed = Parser.parse(input);
+                String cmd = parsed.cmd;
+                String rest = parsed.rest;
 
                 if (cmd.equals("bye")) {
                     ui.showGoodbye();
@@ -40,19 +37,19 @@ public class Pepsi {
                 }
 
                 if (cmd.equals("mark") || cmd.equals("unmark")) {
-                    int number = commandParser.parseTaskNumber(rest, cmd);
+                    int number = Parser.parseTaskNumber(rest, cmd);
                     handleMarking(cmd, number);
                     continue;
                 }
 
                 if (cmd.equals("delete")) {
-                    int number = commandParser.parseTaskNumber(rest, cmd);
+                    int number = Parser.parseTaskNumber(rest, cmd);
                     handleDelete(number);
                     continue;
                 }
 
                 if (cmd.equals("todo") || cmd.equals("deadline") || cmd.equals("event")) {
-                    Task task = commandParser.parseTask(cmd, rest);
+                    Task task = Parser.parseTask(cmd, rest);
                     addTask(task);
                     continue;
                 }
