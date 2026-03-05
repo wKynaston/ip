@@ -4,15 +4,13 @@ import actions.Task;
 import exceptions.commandException;
 import exceptions.commandParser;
 import storage.Storage;
+import tasklist.TaskList;
 import ui.Ui;
-
-import java.util.ArrayList;
 
 public class Pepsi {
 
-    // Load tasks when program starts
-    private static final ArrayList<Task> catalogue = Storage.load();
     private static final Ui ui = new Ui();
+    private static final TaskList tasks = new TaskList(Storage.load());
 
     public static void main(String[] args) {
         ui.showWelcome();
@@ -37,7 +35,7 @@ public class Pepsi {
                 }
 
                 if (cmd.equals("list")) {
-                    ui.showTaskList(catalogue);
+                    ui.showTaskList(tasks.getTasks());
                     continue;
                 }
 
@@ -71,40 +69,26 @@ public class Pepsi {
     }
 
     private static void addTask(Task task) {
-        catalogue.add(task);
-        Storage.save(catalogue);
-        ui.showTaskAdded(task, catalogue.size());
+        tasks.add(task);
+        Storage.save(tasks.getTasks());
+        ui.showTaskAdded(task, tasks.size());
     }
 
     private static void handleMarking(String cmd, int number) throws commandException {
-        int idx = number - 1;
-
-        if (idx < 0 || idx >= catalogue.size()) {
-            throw new commandException("Invalid task number. Even Coke could count better than that.");
-        }
-
-        Task t = catalogue.get(idx);
-
         if (cmd.equals("mark")) {
-            t.setDone(true);
+            Task t = tasks.mark(number);
+            Storage.save(tasks.getTasks());
             ui.showTaskMarked(t);
         } else {
-            t.setDone(false);
+            Task t = tasks.unmark(number);
+            Storage.save(tasks.getTasks());
             ui.showTaskUnmarked(t);
         }
-
-        Storage.save(catalogue);
     }
 
     private static void handleDelete(int number) throws commandException {
-        int idx = number - 1;
-
-        if (idx < 0 || idx >= catalogue.size()) {
-            throw new commandException("Invalid task number. Coke-level counting detected.");
-        }
-
-        Task removed = catalogue.remove(idx);
-        Storage.save(catalogue);
-        ui.showTaskDeleted(removed, catalogue.size());
+        Task removed = tasks.delete(number);
+        Storage.save(tasks.getTasks());
+        ui.showTaskDeleted(removed, tasks.size());
     }
 }
