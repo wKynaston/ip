@@ -1,7 +1,7 @@
 package storage;
 
-import actions.*;
-import exceptions.commandException;
+import tasks.*;
+import exceptions.CommandException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public ArrayList<Task> load() throws commandException {
+    public ArrayList<Task> load() throws CommandException {
         ArrayList<Task> tasks = new ArrayList<>();
 
         try {
@@ -47,7 +47,7 @@ public class Storage {
             reader.close();
 
         } catch (IOException e) {
-            throw new commandException("Storage error. Must be Coke sabotaging the system.");
+            throw new CommandException("Storage error. Must be Coke sabotaging the system.");
         }
 
         return tasks;
