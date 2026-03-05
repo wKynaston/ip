@@ -16,7 +16,7 @@ public class commandParser {
 
     public static int parseTaskNumber(String rest, String cmd) throws commandException {
         if (rest == null || rest.trim().isEmpty()) {
-            throw new commandException("Mark what? Coke-level instructions detected.\n"
+            throw new commandException("What? Coke-level instructions detected.\n"
                     + "Use: " + cmd + " <task number>");
         }
 
